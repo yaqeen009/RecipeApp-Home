@@ -14,6 +14,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public class RequestManager {
+
     Context context;
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://api.spoonacular.com/")
@@ -43,6 +44,7 @@ public class RequestManager {
                 listener.didError(t.getMessage());
             }
         });
+
         }
     }
     interface CallRandomRecipes{
