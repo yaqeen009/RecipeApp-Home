@@ -5,31 +5,25 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.testapp.Adapters.PopularRecipeAdapter;
-import com.example.testapp.Listeners.RandomRecipeResponseListener;
-import com.example.testapp.Models.RandomRecipeApiResponse;
-import com.example.testapp.Models.Recipe;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import com.example.testapp.Adapters.PopularRecipeAdapter;
+import com.example.testapp.Listeners.RandomRecipeResponseListener;
+import com.example.testapp.Models.RandomRecipeApiResponse;
 
+public class PopularRecipeActivity extends AppCompatActivity {
     ProgressDialog dialog;
     RequestManager manager;
     PopularRecipeAdapter popularRecipeAdapter;
     RecyclerView recyclerView;
-    Button recipeMore;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_popular_recipe);
 
         dialog = new ProgressDialog(this);
         dialog.setTitle("Loading...");
@@ -38,22 +32,17 @@ public class MainActivity extends AppCompatActivity {
         manager.getRandomRecipes(randomRecipeResponseListener);
         dialog.show();
 
-        recipeMore = findViewById(R.id.popular_recipe_more);
-        recipeMore.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext() , PopularRecipeActivity.class);
-            startActivity(intent);
 
-        });
     }
 
     private final RandomRecipeResponseListener randomRecipeResponseListener= new RandomRecipeResponseListener() {
         @Override
         public void didFetch(RandomRecipeApiResponse response, String message) {
             dialog.hide();
-            recyclerView = findViewById(R.id.popular_Recipe_Recycler);
+            recyclerView = findViewById(R.id.popular_Recipe_Recycler2);
             recyclerView.hasFixedSize();
-            recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false ));
-            popularRecipeAdapter = new PopularRecipeAdapter(MainActivity.this, response.recipes);
+            recyclerView.setLayoutManager(new GridLayoutManager(PopularRecipeActivity.this,2 ));
+            popularRecipeAdapter = new PopularRecipeAdapter(PopularRecipeActivity.this, response.recipes);
             popularRecipeAdapter.setOnClickListener((position, recipe) -> Toast.makeText(getApplicationContext(), "item clicked", Toast.LENGTH_SHORT).show());
             recyclerView.setAdapter(popularRecipeAdapter);
         }
@@ -61,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void didError(String message) {
             dialog.hide();
-            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(PopularRecipeActivity.this, message, Toast.LENGTH_SHORT).show();
         }
     };
 }
