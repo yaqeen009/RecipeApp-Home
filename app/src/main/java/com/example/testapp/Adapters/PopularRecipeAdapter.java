@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.testapp.Listeners.RecipeClickListener;
 import com.example.testapp.Models.Recipe;
 import com.example.testapp.R;
 import com.example.testapp.Models.Recipe;
@@ -23,12 +24,14 @@ import java.util.List;
 public class PopularRecipeAdapter extends RecyclerView.Adapter<PopularRecipeViewHolder> {
     Context context;
     List<Recipe> list;
+    RecipeClickListener listener;
     private OnClickListener onClickListener;
 
 
-    public PopularRecipeAdapter(Context context, List<Recipe> list) {
+    public PopularRecipeAdapter(Context context, List<Recipe> list, RecipeClickListener listener) {
         this.context = context;
         this.list = list;
+        this.listener = listener;
     }
 
     @NonNull
@@ -50,6 +53,12 @@ public class PopularRecipeAdapter extends RecyclerView.Adapter<PopularRecipeView
                 onClickListener.onClick(position, recipe);
             }
         });
+        holder.popular_Recipe_Card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onRecipeClicked(String.valueOf(list.get(holder.getAdapterPosition()).id));
+            }
+        });
 
     }
 
@@ -69,13 +78,13 @@ public class PopularRecipeAdapter extends RecyclerView.Adapter<PopularRecipeView
 }
 
 class PopularRecipeViewHolder extends RecyclerView.ViewHolder {
-    CardView food_Card_popular;
+    CardView popular_Recipe_Card;
     ImageView food_image_popular;
     TextView food_name_popular;
 
     public PopularRecipeViewHolder(@NonNull View itemView) {
         super(itemView);
-        food_Card_popular = itemView.findViewById(R.id.food_Card_popular);
+        popular_Recipe_Card = itemView.findViewById(R.id.popular_Recipe_Card);
         food_image_popular = itemView.findViewById(R.id.food_image_popular);
         food_name_popular = itemView.findViewById(R.id.food_name_popular);
 
